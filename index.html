@@ -1,0 +1,293 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.wrap{padding:1rem 0;font-family:var(--font-sans);}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:1.25rem;}
+.leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);}
+.ld{width:10px;height:10px;border-radius:2px;}
+.progress-row{display:flex;gap:10px;margin-bottom:1.25rem;}
+.pm{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:9px 14px;flex:1;}
+.pm-l{font-size:11px;color:var(--color-text-secondary);margin-bottom:1px;}
+.pm-v{font-size:19px;font-weight:500;color:var(--color-text-primary);}
+.chain-scroll{overflow-x:auto;padding-bottom:8px;margin-bottom:1.25rem;}
+.chain{display:flex;align-items:center;gap:0;min-width:max-content;}
+.node{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.chem{padding:5px 10px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;white-space:nowrap;}
+.chem.sat{background:#E1F5EE;color:#0F6E56;border:0.5px solid #5DCAA5;}
+.chem.ar{background:#EEEDFE;color:#3C3489;border:0.5px solid #7F77DD;}
+.chem.fut{background:var(--color-background-secondary);color:var(--color-text-tertiary);border:0.5px dashed var(--color-border-secondary);}
+.chem.cur{background:#FAEEDA;color:#633806;border:1.5px solid #EF9F27;}
+.arr{font-size:13px;color:var(--color-text-tertiary);padding:0 4px;align-self:center;flex-shrink:0;}
+.step-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem;}
+.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;background:#EEEDFE;color:#3C3489;margin-bottom:8px;}
+.badge.sat-b{background:#E1F5EE;color:#0F6E56;}
+.task-q{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;}
+.task-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem;}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+.field-wrap{display:flex;flex-direction:column;gap:4px;}
+.field-label{font-size:12px;color:var(--color-text-secondary);}
+input.ans{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px;font-family:var(--font-sans);}
+input.ans:focus{outline:none;border-color:#7F77DD;}
+input.ans.ok{border:1.5px solid #1D9E75 !important;background:#E1F5EE;color:#0F6E56;}
+input.ans.err{border:1.5px solid #E24B4A !important;background:#FCEBEB;color:#791F1F;}
+.hint-toggle{font-size:12px;color:var(--color-text-tertiary);cursor:pointer;margin-bottom:8px;display:inline-block;}
+.hint-toggle:hover{color:var(--color-text-secondary);}
+.hint-box{font-size:12px;color:#633806;background:#FAEEDA;border-radius:var(--border-radius-md);padding:8px 10px;margin-bottom:10px;line-height:1.5;}
+.btn-row{display:flex;gap:8px;}
+button.check-btn{flex:1;padding:8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px;cursor:pointer;}
+button.check-btn:hover{background:var(--color-background-secondary);}
+button.next-btn{flex:1;padding:8px;border:0.5px solid #5DCAA5;border-radius:var(--border-radius-md);background:#E1F5EE;color:#0F6E56;font-size:13px;cursor:pointer;display:none;}
+button.show-btn{flex:1;padding:8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;}
+.fb{margin-top:10px;padding:9px 12px;border-radius:var(--border-radius-md);font-size:13px;line-height:1.5;display:none;}
+.fb.ok{background:#E1F5EE;color:#0F6E56;}
+.fb.err{background:#FCEBEB;color:#791F1F;}
+.finish{text-align:center;padding:2rem;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);}
+.finish h3{font-size:18px;font-weight:500;margin-bottom:8px;}
+.finish p{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.2rem;}
+button.restart{padding:9px 24px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:14px;cursor:pointer;}
+</style>
+
+<div class="wrap">
+<h2>Цепочка превращений углеводородов</h2>
+<p class="sub">20 шагов. Для каждого превращения запиши реагент(ы) и условия реакции самостоятельно.</p>
+<div class="legend">
+  <div class="leg"><div class="ld" style="background:#5DCAA5;"></div>Насыщенные / ненасыщенные</div>
+  <div class="leg"><div class="ld" style="background:#7F77DD;"></div>Ароматические</div>
+  <div class="leg"><div class="ld" style="background:#EF9F27;"></div>Текущий шаг</div>
+</div>
+<div class="progress-row">
+  <div class="pm"><div class="pm-l">Шаг</div><div class="pm-v" id="pstep">1 / 20</div></div>
+  <div class="pm"><div class="pm-l">Верно</div><div class="pm-v" id="pcor">0</div></div>
+  <div class="pm"><div class="pm-l">С подсказкой</div><div class="pm-v" id="phint">0</div></div>
+</div>
+<div class="chain-scroll"><div class="chain" id="chain"></div></div>
+<div id="area"></div>
+</div>
+
+<script>
+function norm(s){
+  return s
+    .toLowerCase()
+    .replace(/[₀₁₂₃₄₅₆₇₈₉]/g,c=>'0123456789'['₀₁₂₃₄₅₆₇₈₉'.indexOf(c)])
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g,c=>'0123456789'['⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(c)])
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function check(val,arr){
+  const v=norm(val);
+  return arr.some(a=>v.includes(norm(a)));
+}
+
+const steps=[
+  {from:"CH4",to:"C2H2",ar:false,q:"Как из метана получить ацетилен?",
+   fields:[{l:"Реагент / тип реакции",k:"r"},{l:"Температура (°C)",k:"c"}],
+   ans:{r:["пиролиз","2ch4","c2h2"],c:["1500"]},
+   hint:"Пиролиз: 2CH₄ → C₂H₂ + 3H₂ при 1500°C",full:"Пиролиз, 1500°C"},
+  {from:"C2H2",to:"C2H4",ar:false,q:"Как из ацетилена получить этилен?",
+   fields:[{l:"Реагент",k:"r"},{l:"Катализатор",k:"c"}],
+   ans:{r:["h2","водород"],c:["pd","палладий","pt","ni","cat","кат"]},
+   hint:"Частичное гидрирование: C₂H₂ + H₂ → C₂H₄ на Pd",full:"H2, катализатор Pd"},
+  {from:"C2H4",to:"C2H5OH",ar:false,q:"Как из этилена получить этанол?",
+   fields:[{l:"Реагент",k:"r"},{l:"Катализатор",k:"c"}],
+   ans:{r:["h2o","вода"],c:["h2so4","h+","кислота","серная"]},
+   hint:"Гидратация: C₂H₄ + H₂O → C₂H₅OH (H+, t°)",full:"H2O, катализатор H2SO4"},
+  {from:"C2H5OH",to:"C2H4",ar:false,q:"Как из этанола получить этилен?",
+   fields:[{l:"Реагент / катализатор",k:"r"},{l:"Температура (°C)",k:"c"}],
+   ans:{r:["h2so4","серная","дегидратация","h2so"],c:["180","160"]},
+   hint:"Дегидратация: C₂H₅OH → C₂H₄ + H₂O (H₂SO₄, 180°C)",full:"H2SO4 (конц.), 180°C"},
+  {from:"C2H4",to:"C2H4Br2",ar:false,q:"Как присоединить бром к этилену?",
+   fields:[{l:"Реагент",k:"r"},{l:"Тип реакции",k:"c"}],
+   ans:{r:["br2","бром"],c:["присоедин","addition","ae","электроф"]},
+   hint:"C₂H₄ + Br₂ → C₂H₄Br₂ — электрофильное присоединение",full:"Br2 (бромная вода), реакция присоединения AE"},
+  {from:"C2H4Br2",to:"C2H2",ar:false,q:"Как из 1,2-дибромэтана получить ацетилен?",
+   fields:[{l:"Реагент",k:"r"},{l:"Растворитель / условия",k:"c"}],
+   ans:{r:["koh","naoh","гидроксид"],c:["спирт","спиртов","алкоголь","t","нагрев"]},
+   hint:"2× дегидробромирование: C₂H₄Br₂ → C₂H₂ (KOH спиртовой, нагрев)",full:"KOH, спиртовой раствор, нагревание"},
+  {from:"3 C2H2",to:"C6H6",ar:true,q:"Как из ацетилена получить бензол?",
+   fields:[{l:"Тип реакции",k:"r"},{l:"Катализатор и t°",k:"c"}],
+   ans:{r:["тримеризация","циклиз","зелинск"],c:["уголь","400","активир","cr"]},
+   hint:"Тримеризация: 3C₂H₂ → C₆H₆ (акт. уголь, 400°C) — реакция Зелинского",full:"Тримеризация, акт. уголь, 400°C"},
+  {from:"C6H6",to:"C6H5NO2",ar:true,q:"Как нитровать бензол?",
+   fields:[{l:"Реагент 1",k:"r"},{l:"Реагент 2 (катализатор)",k:"c"}],
+   ans:{r:["hno3","азотная","нитрующ"],c:["h2so4","серная"]},
+   hint:"Нитрующая смесь = HNO₃(конц.) + H₂SO₄(конц.), t°",full:"HNO3 (конц.) + H2SO4 (конц.)"},
+  {from:"C6H6",to:"C6H5Cl",ar:true,q:"Как хлорировать бензол (замещение в кольцо)?",
+   fields:[{l:"Реагент",k:"r"},{l:"Катализатор",k:"c"}],
+   ans:{r:["cl2","хлор"],c:["alcl3","хлорид алюм","fecl3","железо"]},
+   hint:"S_EAr: C₆H₆ + Cl₂ → C₆H₅Cl + HCl (катализатор AlCl₃)",full:"Cl2, катализатор AlCl3"},
+  {from:"C6H6",to:"C6H5CH3",ar:true,q:"Как алкилировать бензол до толуола?",
+   fields:[{l:"Реагент (алкилирующий)",k:"r"},{l:"Катализатор",k:"c"}],
+   ans:{r:["ch3cl","хлорметан","метилхлор"],c:["alcl3","хлорид алюм","фридел","крафтс"]},
+   hint:"Реакция Фриделя–Крафтса: C₆H₆ + CH₃Cl → C₆H₅CH₃ + HCl (AlCl₃)",full:"CH3Cl, AlCl3 (Фридель–Крафтс)"},
+  {from:"C6H5CH3",to:"C6H5COOH",ar:true,q:"Как окислить толуол до бензойной кислоты?",
+   fields:[{l:"Окислитель",k:"r"},{l:"Что окисляется?",k:"c"}],
+   ans:{r:["kmno4","перманганат","k2cr2o7","хромат"],c:["боков","цепь","ch3","метил"]},
+   hint:"KMnO₄ окисляет боковую цепь: C₆H₅CH₃ → C₆H₅COOH",full:"KMnO4, окисляется боковая цепь до –COOH"},
+  {from:"C6H5CH3",to:"o/п-CH3C6H4Br",ar:true,q:"Куда идёт бромирование толуола и почему?",
+   fields:[{l:"Реагент + катализатор",k:"r"},{l:"Положение замещения",k:"c"}],
+   ans:{r:["br2","бром","alcl3","fecl3"],c:["орто","пара","1,2","1,4","o-","п-"]},
+   hint:"CH₃ — ориентант I рода: направляет в орто- и пара-положения",full:"Br2, AlCl3; орто- и пара-положения"},
+  {from:"C6H5Cl",to:"o/п-ClC6H4NO2",ar:true,q:"Куда направляет –Cl при нитровании хлорбензола?",
+   fields:[{l:"Реагенты нитрования",k:"r"},{l:"Положение + тип ориентанта",k:"c"}],
+   ans:{r:["hno3","нитрующ","h2so4"],c:["орто","пара","исключ","желтая","орто- и пара"]},
+   hint:"Cl — исключение: дезактивирует кольцо, но орто-/пара-ориентант",full:"HNO3+H2SO4; орто- и пара- (Cl — исключение)"},
+  {from:"C6H5NO2",to:"м-C6H4(NO2)2",ar:true,q:"Куда направляет –NO₂ при повторном нитровании?",
+   fields:[{l:"Реагенты",k:"r"},{l:"Положение + тип ориентанта",k:"c"}],
+   ans:{r:["hno3","нитрующ"],c:["мета","1,3","ii рода","дезакт","красная"]},
+   hint:"–NO₂ — ориентант II рода: только мета-положение",full:"HNO3+H2SO4; мета- (NO2 — ориентант II рода)"},
+  {from:"C6H6",to:"C6H12",ar:true,q:"Как гидрировать бензол до циклогексана?",
+   fields:[{l:"Реагент",k:"r"},{l:"Катализатор и t°",k:"c"}],
+   ans:{r:["h2","водород","3h2"],c:["ni","pd","pt","300","никель","палладий"]},
+   hint:"C₆H₆ + 3H₂ → C₆H₁₂ (Ni, 300°C) — жёсткие условия",full:"3H2, катализатор Ni (Pd/Pt), 300°C"},
+  {from:"C6H12",to:"C6H6",ar:true,q:"Как ароматизировать циклогексан? (реакция Зелинского)",
+   fields:[{l:"Тип реакции",k:"r"},{l:"Катализатор",k:"c"}],
+   ans:{r:["дегидроцикл","ароматиз","дегидриров"],c:["pt","cr","зелинск","t"]},
+   hint:"Дегидроциклизация: C₆H₁₂ → C₆H₆ + 3H₂ (Pt/Cr₂O₃, t°)",full:"Дегидроциклизация, Pt или Cr2O3, t°"},
+  {from:"C6H6",to:"C6H5C2H5",ar:true,q:"Как получить этилбензол из бензола?",
+   fields:[{l:"Реагент (алкилирующий)",k:"r"},{l:"Катализатор",k:"c"}],
+   ans:{r:["c2h5cl","хлорэтан","c2h4","этилен","этилхлор"],c:["alcl3","h+","кислота","фридел"]},
+   hint:"C₆H₆ + C₂H₅Cl → C₆H₅C₂H₅ + HCl (AlCl₃) — Фридель–Крафтс",full:"C2H5Cl, AlCl3 (или C2H4, H+)"},
+  {from:"C6H5C2H5",to:"C6H5CH=CH2",ar:true,q:"Как из этилбензола получить стирол?",
+   fields:[{l:"Тип реакции",k:"r"},{l:"Условия",k:"c"}],
+   ans:{r:["дегидриров","дегид","отщепл"],c:["600","t","кат","нагрев"]},
+   hint:"Дегидрирование: C₆H₅C₂H₅ → C₆H₅CH=CH₂ + H₂ (600°C, катализатор)",full:"Дегидрирование, ~600°C, катализатор"},
+  {from:"C6H5Br",to:"C6H5CH3",ar:true,q:"Как получить толуол из бромбензола? (именная реакция)",
+   fields:[{l:"Реагенты",k:"r"},{l:"Название реакции",k:"c"}],
+   ans:{r:["na","натрий","ch3br","бромметан"],c:["вюрц","wurtz","фиттиг"]},
+   hint:"Реакция Вюрца-Фиттига: C₆H₅Br + 2Na + CH₃Br → C₆H₅CH₃ + 2NaBr",full:"Na + CH3Br; реакция Вюрца-Фиттига"},
+  {from:"C6H6 + 3Cl2",to:"C6H6Cl6",ar:true,q:"Как получить гексахлорциклогексан из бензола?",
+   fields:[{l:"Условие (не катализатор)",k:"r"},{l:"Тип реакции",k:"c"}],
+   ans:{r:["уф","ультрафиол","hv","свет","облучен"],c:["присоедин","радикал","разруш"]},
+   hint:"Радикальное присоединение: C₆H₆ + 3Cl₂ → C₆H₆Cl₆ (hν, 80°C)",full:"УФ-облучение (hν); радикальное присоединение"}
+];
+
+let cur=0,corr=0,hintUsed=0,revealed=false,hintShown=false;
+
+function renderChain(){
+  const ch=document.getElementById('chain');ch.innerHTML='';
+  for(let i=0;i<steps.length;i++){
+    const s=steps[i];
+    const nd=document.createElement('div');nd.className='node';
+    const bx=document.createElement('div');
+    let cls='chem ';
+    if(i<cur) cls+=s.ar?'ar':'sat';
+    else if(i===cur) cls+='cur';
+    else cls+='fut';
+    bx.className=cls;bx.textContent=s.from;
+    nd.appendChild(bx);ch.appendChild(nd);
+    const ar=document.createElement('div');ar.className='arr';ar.textContent='→';ch.appendChild(ar);
+  }
+  const last=document.createElement('div');last.className='node';
+  const lb=document.createElement('div');
+  const ls=steps[steps.length-1];
+  lb.className='chem '+(cur>=steps.length?(ls.ar?'ar':'sat'):'fut');
+  lb.textContent=ls.to;last.appendChild(lb);ch.appendChild(last);
+}
+
+function renderStep(){
+  const area=document.getElementById('area');
+  if(cur>=steps.length){
+    const pct=Math.round(corr/steps.length*100);
+    area.innerHTML=`<div class="finish"><h3>Цепочка пройдена!</h3>
+    <p>Правильных ответов: ${corr} из ${steps.length} (${pct}%)<br>С подсказкой: ${hintUsed}</p>
+    <p>${pct>=80?'Отличный результат!':pct>=50?'Хороший старт, повтори слабые места.':'Рекомендуем повторить тему.'}</p>
+    <button class="restart" onclick="restart()">Начать заново</button></div>`;
+    return;
+  }
+  revealed=false;hintShown=false;
+  const s=steps[cur];
+  const badge=`<span class="badge ${s.ar?'':'sat-b'}">Шаг ${cur+1} из ${steps.length} — ${s.ar?'Ароматические':'Алканы / Алкены / Алкины'}</span>`;
+  const arrow=`<div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;">
+    <span style="font-weight:500;color:var(--color-text-primary);">${s.from}</span>
+    <span style="margin:0 6px;">→</span>
+    <span style="font-weight:500;color:var(--color-text-primary);">${s.to}</span>
+  </div>`;
+  const flds=s.fields.map((f,i)=>`<div class="field-wrap">
+    <div class="field-label">${f.l}</div>
+    <input class="ans" id="inp-${i}" placeholder="Введи ответ..." autocomplete="off" />
+  </div>`).join('');
+  area.innerHTML=`<div class="step-card">
+    ${badge}
+    <div class="task-q">${s.q}</div>
+    ${arrow}
+    <div class="fields">${flds}</div>
+    <span class="hint-toggle" id="ht" onclick="toggleHint()">Показать подсказку</span>
+    <div class="hint-box" id="hb" style="display:none;">${s.hint}</div>
+    <div class="btn-row">
+      <button class="check-btn" onclick="doCheck()">Проверить</button>
+      <button class="show-btn" onclick="doReveal()">Показать ответ</button>
+      <button class="next-btn" id="nb" onclick="doNext()">${cur<steps.length-1?'Дальше →':'Завершить'}</button>
+    </div>
+    <div class="fb" id="fb"></div>
+  </div>`;
+
+  document.querySelectorAll('input.ans').forEach(inp=>{
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')doCheck();});
+  });
+}
+
+function toggleHint(){
+  const hb=document.getElementById('hb'),ht=document.getElementById('ht');
+  if(!hintShown){hintShown=true;hb.style.display='block';ht.textContent='Скрыть подсказку';}
+  else{hb.style.display='none';ht.textContent='Показать подсказку';}
+}
+
+function doCheck(){
+  const s=steps[cur];
+  const fb=document.getElementById('fb');
+  const nb=document.getElementById('nb');
+  let allOk=true;
+  s.fields.forEach((f,i)=>{
+    const inp=document.getElementById('inp-'+i);
+    const val=inp.value;
+    if(!val.trim()){inp.className='ans err';allOk=false;return;}
+    const ok=check(val,s.ans[f.k]);
+    inp.className='ans '+(ok?'ok':'err');
+    if(!ok)allOk=false;
+  });
+  fb.style.display='block';
+  if(allOk){
+    fb.className='fb ok';
+    fb.textContent='Верно! '+s.hint;
+    if(!revealed)corr++;
+    nb.style.display='block';
+    document.getElementById('pcor').textContent=corr;
+  } else {
+    fb.className='fb err';
+    fb.textContent='Не совсем верно. Поля с ошибкой выделены красным — исправь и попробуй снова.';
+  }
+}
+
+function doReveal(){
+  const s=steps[cur];
+  revealed=true;hintUsed++;
+  s.fields.forEach((f,i)=>{
+    const inp=document.getElementById('inp-'+i);
+    inp.value=s.ans[f.k][0];
+    inp.className='ans ok';
+  });
+  const fb=document.getElementById('fb');
+  fb.style.display='block';fb.className='fb ok';
+  fb.textContent=s.full;
+  document.getElementById('nb').style.display='block';
+  document.getElementById('phint').textContent=hintUsed;
+}
+
+function doNext(){
+  cur++;
+  document.getElementById('pstep').textContent=(Math.min(cur+1,steps.length))+' / '+steps.length;
+  renderChain();renderStep();
+}
+
+function restart(){
+  cur=0;corr=0;hintUsed=0;
+  document.getElementById('pstep').textContent='1 / 20';
+  document.getElementById('pcor').textContent='0';
+  document.getElementById('phint').textContent='0';
+  renderChain();renderStep();
+}
+
+renderChain();renderStep();
+</script>
